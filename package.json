@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "ethers": "^6.13.5",
+    "kalp-dapp-pkg": "^1.0.4",
+    "kalp-wallet-ts": "^1.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.3.0",
     "test-kalp-wallet-package": "^1.0.67"
   },
   "devDependencies": {

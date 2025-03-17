@@ -4,6 +4,7 @@ import { Network, submitTransaction, evaluateTransaction } from "kalp-wallet-ts"
 import {
     getToken,
     connectToWallet,
+    getEnrollmentIdFromWallet,
     readTransactionFromWallet,
     writeTransactionFromWallet,
 } from "kalp-dapp-pkg";
@@ -51,6 +52,7 @@ function KalpConnect() {
     const [balanceOnKalp, setBalanceOnKalp] = useState(null);
     const [balanceOnKalpBridge, setBalanceOnKalpBridge] = useState(null);
     const [walletConnected, setWalletConnected] = useState(false);
+    const [enrollmentId, setenrollmentId] = useState("");
 
     // move
     const connectWalletKalp = async () => {
@@ -65,9 +67,28 @@ function KalpConnect() {
             );
             if (res === true) {
                 setWalletConnected(true);
+                await getEnrollmentId();
             }
         } catch (e) {
             console.log(`Error connecting wallet: ${e}`);
+        }
+    };
+
+    const getEnrollmentId = async () => {
+        try {
+            const dappToken = localStorage.getItem("kalp_dappToken") || "";
+            if (!dappToken) {
+                console.log("Error: no dappToken exists");
+                throw new Error("Error: no dappToken exists");
+            }
+            const res = (await getEnrollmentIdFromWallet(dappToken, "OPENSEA", "http://localhost:3000/favicon.ico", "http://localhost:3000")) || "";
+            console.log("res", res)
+            setenrollmentId(res);
+
+            localStorage.setItem("opensea_enrollmentId", res);
+        } catch (e) {
+            // TODO: format the error msg
+            console.log(`error is :${e}`);
         }
     };
 
@@ -154,20 +175,33 @@ function KalpConnect() {
 
 
         try {
-            const makeTransaction = await submitTransaction(
-                networkName,
-                networkURL,
-                enrollmentId,
-                privateKeyString,
-                cert,
+            // const makeTransaction = await submitTransaction(
+            //     networkName,
+            //     networkURL,
+            //     enrollmentId,
+            //     privateKeyString,
+            //     cert,
+            //     channelName,
+            //     chainCodeName,
+            //     transactionName,
+            //     transactionParams
+            // );
+
+            let dappToken = localStorage.getItem("kalp_dappToken");
+            const makeTransaction = await writeTransactionFromWallet(
+                dappToken,
+                CONSTANTS.dappName,
+                CONSTANTS.faviconURL,
+                CONSTANTS.apiBaseURL,
                 channelName,
                 chainCodeName,
                 transactionName,
                 transactionParams
             );
+
             const result = JSON.stringify(makeTransaction);
-            console.log(`transaction data2: ${makeTransaction}`);
-            setTxId(makeTransaction);
+            console.log(`transaction data2: ${JSON.stringify(makeTransaction)}`);
+            // setTxId(makeTransaction);
         } catch (error) {
             console.log(`error happenned while submitting transaction`, error);
         }
