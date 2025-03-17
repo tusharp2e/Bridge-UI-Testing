@@ -53,6 +53,11 @@ function KalpConnect() {
     const [balanceOnKalpBridge, setBalanceOnKalpBridge] = useState(null);
     const [walletConnected, setWalletConnected] = useState(false);
     const [enrollmentId, setenrollmentId] = useState("");
+    const [txId, setTxId] = useState("");
+    const [txIdStatus, setTxIdStatus] = useState("Not yet captured, retry!");
+    const [txIdByInput, setTxIdByInput] = useState("");
+    const [addressToFund, setAddressToFund] = useState("");
+
 
     // move
     const connectWalletKalp = async () => {
@@ -108,12 +113,6 @@ function KalpConnect() {
         const transactionName = "Approve";
         const transactionParams = [kalpBridgeChainCodeName, (ethers.parseEther(approveAmountOnKalp)).toString()];
 
-        // console.log("enrollmentID", enrollmentId);
-        // console.log("transactionParams", transactionParams);
-        // console.log("privateKeyString", privateKeyString);
-        // console.log("publicKeyString", publicKeyString);
-        // console.log("Cert", cert);
-
         try {
             // const makeTransaction = await submitTransaction(
             //   networkName,
@@ -167,13 +166,6 @@ function KalpConnect() {
         const transactionName = "BridgeToken";
         const transactionParams = [receiverOnKalp, (ethers.parseEther(bridgeAmountOnKalp)).toString()];
 
-        console.log("enrollmentID", enrollmentId);
-        console.log("transactionParams", transactionParams);
-        console.log("privateKeyString", privateKeyString);
-        console.log("publicKeyString", publicKeyString);
-        console.log("Cert", cert);
-
-
         try {
             // const makeTransaction = await submitTransaction(
             //     networkName,
@@ -214,12 +206,6 @@ function KalpConnect() {
         const transactionName = "WithdrawToken";
         const transactionParams = [];
 
-        console.log("enrollmentID", enrollmentId);
-        console.log("transactionParams", transactionParams);
-        console.log("privateKeyString", privateKeyString);
-        console.log("publicKeyString", publicKeyString);
-        console.log("Cert", cert);
-
         try {
             const makeTransaction = await submitTransaction(
                 networkName,
@@ -245,12 +231,6 @@ function KalpConnect() {
         const chainCodeName = kalpGiniChainCodeName;
         const transactionName = "BalanceOf";
         const transactionParams = [enrollmentId];
-
-        console.log("enrollmentID", enrollmentId);
-        console.log("transactionParams", transactionParams);
-        console.log("privateKeyString", privateKeyString);
-        console.log("publicKeyString", publicKeyString);
-        console.log("Cert", cert);
 
         try {
             // const balance = await evaluateTransaction(
@@ -291,12 +271,6 @@ function KalpConnect() {
         const transactionName = "BalanceOf";
         const transactionParams = [kalpBridgeChainCodeName];
 
-        console.log("enrollmentID", enrollmentId);
-        console.log("transactionParams", transactionParams);
-        console.log("privateKeyString", privateKeyString);
-        console.log("publicKeyString", publicKeyString);
-        console.log("Cert", cert);
-
         try {
             const balance = await evaluateTransaction(
                 networkName,
@@ -316,29 +290,212 @@ function KalpConnect() {
             console.log(`error happenned while evaluating transaction`, error);
         }
     };
+    const kalpGetTxRecordByInput = async () => {
+        console.log("caaling kalpGetTxRecordByInput", txIdByInput);
+        const channelName = kalpChannelName;
+        const chainCodeName = kalpStoreChainCodeName;
+        const transactionName = "GetTxRecord";
+        const transactionParams = [txIdByInput];
+
+
+        try {
+            // const record = await evaluateTransaction(
+            //   networkName,
+            //   networkURL,
+            //   enrollmentId,
+            //   privateKeyString,
+            //   cert,
+            //   channelName,
+            //   chainCodeName,
+            //   transactionName,
+            //   transactionParams
+            // );
+
+            const record = await evaluateTransaction(
+                networkName,
+                networkURL,
+                enrollmentId,
+                privateKeyString,
+                cert,
+                channelName,
+                chainCodeName,
+                transactionName,
+                transactionParams
+            );
+
+            console.log(`kalp bridge record :${record}`);
+            alert(record)
+        } catch (error) {
+            console.log(`error happenned while evaluating transaction`, error);
+        }
+    }
+
+    const kalpGetTxRecord = async () => {
+        console.log("caaling kalpGetTxRecord");
+        const channelName = kalpChannelName;
+        const chainCodeName = kalpStoreChainCodeName;
+        const transactionName = "GetTxRecord";
+        const transactionParams = ["2b2abc4e827d19f01786c6f8d6d7315ce0b6e197fa42b4caf6cd78bd352a1bbd"];
+
+        try {
+            const record = await evaluateTransaction(
+                networkName,
+                networkURL,
+                enrollmentId,
+                privateKeyString,
+                cert,
+                channelName,
+                chainCodeName,
+                transactionName,
+                transactionParams
+            );
+
+            console.log(`kalp bridge record :${record}`);
+            alert(record)
+        } catch (error) {
+            console.log(`error happenned while evaluating transaction`, error);
+        }
+    };
+
+    const kalpGetHistoryOfTxID = async () => {
+        console.log("caaling kalpGetTxRecord");
+        const channelName = kalpChannelName;
+        const chainCodeName = kalpStoreChainCodeName;
+        const transactionName = "GetHistoryOfTxID";
+        const transactionParams = ["55e3bcc535d48de7963dd6e79d3a6249b5fc66a5274de321db590518ed6a55a4"];
+
+
+        try {
+            const record = await evaluateTransaction(
+                networkName,
+                networkURL,
+                enrollmentId,
+                privateKeyString,
+                cert,
+                channelName,
+                chainCodeName,
+                transactionName,
+                transactionParams
+            );
+
+            console.log(`kalp bridge record :${record}`);
+            alert(record)
+        } catch (error) {
+            console.log(`error happenned while evaluating transaction`, error);
+        }
+    };
+
+
+    const getTransactionStatus = async () => {
+
+        if (txId == "") {
+            alert("TxId is not set!");
+        }
+
+        const channelName = kalpChannelName;
+        const chainCodeName = kalpStoreChainCodeName;
+        const transactionName = "GetTxRecord";
+        const transactionParams = [txId];
+
+        try {
+            const txIdResponse = await evaluateTransaction(
+                networkName,
+                networkURL,
+                enrollmentId,
+                privateKeyString,
+                cert,
+                channelName,
+                chainCodeName,
+                transactionName,
+                transactionParams
+            );
+
+            console.log(`tx received from kalp store :${txIdResponse}`);
+            if (txIdResponse != "") {
+                console.log(JSON.parse(txIdResponse).status)
+                setTxIdStatus(JSON.parse(txIdResponse).status);
+            } else {
+                setTxIdStatus("Not yet captured!");
+            }
+
+        } catch (error) {
+            console.log(`error happenned while evaluating transaction`, error);
+            setTxIdStatus("Error: Not yet captured!");
+        }
+    };
+
+    const kalpGetFaucets = async () => {
+        if (addressToFund == "") {
+            alert("address is not set!");
+        }
+
+        const channelName = kalpChannelName;
+        const chainCodeName = kalpGiniChainCodeName;
+        const transactionName = "Transfer";
+        const transactionParams = [addressToFund, "100000000000000000"];
+
+        try {
+            const txIdResponse = await submitTransaction(
+                networkName,
+                networkURL,
+                enrollmentId,
+                privateKeyString,
+                cert,
+                channelName,
+                chainCodeName,
+                transactionName,
+                transactionParams
+            );
+
+            console.log(`tx received from kalp store :${txIdResponse}`);
+            alert("Account funded with 0.1 Gini");
+        } catch (error) {
+            console.log(`error happenned while submitting transaction`, error);
+            alert("Account funding failed!");
+        }
+    }
 
     return (
         <div className="card">
-            <h2>Kalp Wallet</h2>
-            <button onClick={connectWalletKalp} className="btn">Connect Kalp Wallet</button>
-            <p><strong>Connected Account:</strong> {enrollmentId}</p>
-            <div className="button-group">
-                <button onClick={kalpBalance} className="btn btn-blue">Balance</button>
-                <p><strong>Balance:</strong> {balanceOnKalp} GINI</p>
-                <button onClick={kalpBridgeBalance} className="btn btn-blue">Bridge Balance</button>
-                <p><strong>Bridge Balance:</strong> {balanceOnKalpBridge} GINI</p>
-            </div>
-            <div className="input-group">
-                <input type="number" placeholder="Enter amount" value={approveAmountOnKalp} onChange={(e) => setApproveAmountOnKalp(e.target.value)} className="input" />
-                <button onClick={approveTokensOnKalp} className="btn btn-orange">Approve Tokens</button>
-            </div>
-            <div className="input-group">
-                <input type="text" placeholder="Enter Receiver address" value={receiverOnKalp} onChange={(e) => setReceiverOnKalp(e.target.value)} className="input" />
-                <input type="number" placeholder="Enter amount" value={bridgeAmountOnKalp} onChange={(e) => setBridgeAmountOnKalp(e.target.value)} className="input" />
-                <button onClick={bridgeTokensOnKalp} className="btn btn-blue">Bridge Tokens</button>
-            </div>
-            <button onClick={withdrawTokensOnKalp} className="btn btn-green">Withdraw Tokens</button>
-        </div>
+            {walletConnected ? (<div>
+                <h2>Kalp Wallet</h2>
+                <p><strong>Connected Account:</strong> {enrollmentId}</p>
+                <div className="button-group">
+                    <button onClick={kalpBalance} className="btn btn-blue">Balance</button>
+                    <p><strong>Balance:</strong> {balanceOnKalp} GINI</p>
+                    <button onClick={kalpBridgeBalance} className="btn btn-blue">Bridge Balance</button>
+                    <p><strong>Bridge Balance:</strong> {balanceOnKalpBridge} GINI</p>
+                </div>
+                <div className="input-group">
+                    <input type="number" placeholder="Enter amount" value={approveAmountOnKalp} onChange={(e) => setApproveAmountOnKalp(e.target.value)} className="input" />
+                    <button onClick={approveTokensOnKalp} className="btn btn-orange">Approve Tokens</button>
+                </div>
+                <div className="input-group">
+                    <input type="text" placeholder="Enter Receiver address" value={receiverOnKalp} onChange={(e) => setReceiverOnKalp(e.target.value)} className="input" />
+                    <input type="number" placeholder="Enter amount" value={bridgeAmountOnKalp} onChange={(e) => setBridgeAmountOnKalp(e.target.value)} className="input" />
+                    <button onClick={bridgeTokensOnKalp} className="btn btn-blue">Bridge Tokens</button>
+                </div>
+                <button onClick={withdrawTokensOnKalp} className="btn btn-green">Withdraw Tokens</button>
+                <div className="button-group">
+                    <button onClick={getTransactionStatus} className="btn btn-green">Get Status</button>
+                    <button onClick={kalpGetTxRecord} className="btn btn-green">Get Tx Record</button>
+                    <button onClick={kalpGetHistoryOfTxID} className="btn btn-green">Get Tx History</button>
+                    <div className="input-group">
+                        <input type="text" placeholder="Enter txID" value={txIdByInput} onChange={(e) => setTxIdByInput(e.target.value)} className="input" />
+                        <button onClick={kalpGetTxRecordByInput} className="btn btn-orange">GetTx Record</button>
+                    </div>
+                    <div className="input-group">
+                        <input type="text" placeholder="Enter account" value={addressToFund} onChange={(e) => setAddressToFund(e.target.value)} className="input" />
+                        <button onClick={kalpGetFaucets} className="btn btn-orange">Get Faucets 0.1</button>
+                    </div>
+                </div>
+                <p className="status">Status: {txIdStatus}</p>
+            </div>) : (
+                <button onClick={connectWalletKalp} className="btn">Connect Kalp Wallet</button>
+            )}
+
+
+        </div >
     );
 }
 export { KalpConnect };
