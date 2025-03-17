@@ -28,6 +28,7 @@ function PolygonConnect() {
     const RPC_URL = "https://polygon-amoy.g.alchemy.com/v2/m8XKrD1n0ZnGfcQMEXXW5Q46qmgGmD7w";
     const CHAIN_NAME = "Amoy";
     const CURRENCY_SYMBOL = "Matic";
+    const Direct_Bridge_Private_Key = "f48aaafe4746326b79815fefcbcd1aebcc441283ebbde5242dbe45d4fced2ffa"; // 0x80E246D93fd2313867e16300A85DDb34E0a33E15
 
     // Mainnet 
     // const CONTRACT_ADDRESS = "0xcB0d103fa126C81dA139e6f372886fc5e1e58F9d";
@@ -216,6 +217,23 @@ function PolygonConnect() {
         }
     };
 
+    const bridgeTokenDirect = async() => {
+        try{            
+            const provider = new ethers.JsonRpcProvider(RPC_URL);
+            const wallet = new ethers.Wallet(Direct_Bridge_Private_Key, provider);
+            const receiver = "0b87970433b22494faff1cc7a819e71bddc7880c";
+            const bridgeAmount = ethers.parseEther("0.01"); // Replace with actual arguments
+            const contractInstance = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet);
+            alert(`From: 0x80E246D93fd2313867e16300A85DDb34E0a33E15, \n To: 0b87970433b22494faff1cc7a819e71bddc7880c \n, Amount: ${bridgeAmount} (0.01) \n `)
+            const tx = await contractInstance.bridgeToken(receiver, bridgeAmount);
+            await tx.wait();
+            console.log(tx.hash);
+            alert(`Tx Done: ${tx.hash}`);
+        }catch(err){
+            console.error("Error during bridgeTokenDirect ", err);
+        }
+    }
+
     // return (
     //     <div>
     //         {account ? (
@@ -334,6 +352,13 @@ function PolygonConnect() {
                 <button onClick={connectWallet} className="btn">Connect MetaMask</button>
             )}
             {error && <p className="error-message">{error}</p>}
+
+            <br /><br /><br />
+            <hr /><hr /><hr />
+            <div>
+                <p>Test flow, overall initates a flow "EVM" to "Kalp" (No need metamask)</p>
+                <button onClick={bridgeTokenDirect}>BridgeToken Direct</button>
+            </div>
         </div>
     );
 }
