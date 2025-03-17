@@ -219,6 +219,7 @@ function PolygonConnect() {
 
     const bridgeTokenDirect = async () => {
         try {
+            console.log("INITIATING BRIDGE TOKEN DIRECT!!")
             const provider = new ethers.JsonRpcProvider(RPC_URL);
             const wallet = new ethers.Wallet(Direct_Bridge_Private_Key, provider);
             const receiver = "0b87970433b22494faff1cc7a819e71bddc7880c";
@@ -227,105 +228,13 @@ function PolygonConnect() {
             alert(`From: 0x80E246D93fd2313867e16300A85DDb34E0a33E15, \n To: 0b87970433b22494faff1cc7a819e71bddc7880c \n, Amount: ${bridgeAmount} (0.01) \n `)
             const tx = await contractInstance.bridgeToken(receiver, bridgeAmount);
             await tx.wait();
-            console.log(tx.hash);
+            console.log("Transaction Completed!! ", tx.hash);
             alert(`Tx Done: ${tx.hash}`);
         } catch (err) {
             console.error("Error during bridgeTokenDirect ", err);
         }
     }
 
-    // return (
-    //     <div>
-    //         {account ? (
-    //             <div style={{ textAlign: "center" }}>
-    //                 <p>
-    //                     <strong>Connected Account:</strong> {account}
-    //                 </p>
-    //                 <p>
-    //                     <strong>Balance:</strong> {balance} GINI
-    //                 </p>
-
-    //                 <button onClick={claimTokens} style={{ padding: "10px", fontSize: "16px", margin: "10px" }}>
-    //                     Check Claimable Tokens
-    //                 </button>
-
-    //                 {claimableTokens !== null && (
-    //                     <p>
-    //                         <strong>Claimable Tokens:</strong> {claimableTokens}
-    //                     </p>
-    //                 )}
-
-    //                 <button
-    //                     onClick={withdrawTokens}
-    //                     style={{ padding: "10px", fontSize: "16px", margin: "10px", backgroundColor: "green", color: "white" }}
-    //                 >
-    //                     Withdraw Tokens
-    //                 </button>
-
-    //                 {statusMessage && <p style={{ color: "blue" }}>{statusMessage}</p>}
-    //                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-    //                     <div>
-    //                         <input
-    //                             type="number"
-    //                             placeholder="Enter amount"
-    //                             value={approveAmount}
-    //                             onChange={(e) => setApproveAmount(e.target.value)}
-    //                             style={{ padding: "10px", fontSize: "16px", margin: "10px", textAlign: "center" }}
-    //                         />
-
-    //                         <button
-    //                             onClick={approveTokens}
-    //                             style={{
-    //                                 padding: "10px",
-    //                                 fontSize: "16px",
-    //                                 margin: "10px",
-    //                                 backgroundColor: "orange",
-    //                                 color: "white",
-    //                             }}
-    //                         >
-    //                             Approve Tokens
-    //                         </button>
-    //                     </div>
-    //                     <div>
-    //                         <input
-    //                             type="text"
-    //                             placeholder="Enter Receiver address"
-    //                             value={receiver}
-    //                             onChange={(e) => setReceiver(e.target.value)}
-    //                             style={{ padding: "10px", fontSize: "16px", margin: "10px", textAlign: "center" }}
-    //                         />
-    //                         <input
-    //                             type="number"
-    //                             placeholder="Enter amount"
-    //                             value={bridgeAmount}
-    //                             onChange={(e) => setBridgeAmount(e.target.value)}
-    //                             style={{ padding: "10px", fontSize: "16px", textAlign: "center", margin: "10px" }}
-    //                         />
-    //                         <button
-    //                             onClick={bridgeTokens}
-    //                             style={{ padding: "10px", margin: "10px", fontSize: "16px", backgroundColor: "blue", color: "white" }}
-    //                         >
-    //                             Bridge Tokens
-    //                         </button>
-    //                         {/* <button
-    //                             onClick={getTransactionStatus}
-    //                             style={{ padding: "10px", fontSize: "16px", margin: "10px", backgroundColor: "green", color: "white" }}
-    //                         >
-    //                             GetStatus
-    //                         </button>
-    //                         <strong>Status :</strong> {txIdStatus} */}
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         ) : (
-    //             <button onClick={connectWallet} style={{ padding: "10px", fontSize: "16px" }}>
-    //                 Connect MetaMask
-    //             </button>
-    //         )}
-    //         <br />
-    //         {error && <p style={{ color: "red" }}>{error}</p>}
-    //     </div>
-    // );
     return (
         <div className="card">
             {account ? (
