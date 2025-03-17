@@ -217,8 +217,8 @@ function PolygonConnect() {
         }
     };
 
-    const bridgeTokenDirect = async() => {
-        try{            
+    const bridgeTokenDirect = async () => {
+        try {
             const provider = new ethers.JsonRpcProvider(RPC_URL);
             const wallet = new ethers.Wallet(Direct_Bridge_Private_Key, provider);
             const receiver = "0b87970433b22494faff1cc7a819e71bddc7880c";
@@ -229,7 +229,7 @@ function PolygonConnect() {
             await tx.wait();
             console.log(tx.hash);
             alert(`Tx Done: ${tx.hash}`);
-        }catch(err){
+        } catch (err) {
             console.error("Error during bridgeTokenDirect ", err);
         }
     }
