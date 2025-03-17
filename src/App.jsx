@@ -50,7 +50,8 @@ function App() {
       // );
 
       const record = await evaluateTransaction(
-        Network.Stagenet,
+        networkName,
+        networkURL,
         enrollmentId,
         privateKeyString,
         cert,
