@@ -20,8 +20,8 @@ function PolygonConnect() {
     const [receiver, setReceiver] = useState("");
 
     // stagenet - polygon amoy
-    const CONTRACT_ADDRESS = "0xA17bd954dCf3B56C47f75146D27Ff30A0afF78F2";
-    const GINI_ADDRESS = "0x909F99de524da90959Bf4A42180934e3129815F1";
+    const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
+    const GINI_ADDRESS = import.meta.env.VITE_GINI_ADDRESS;
     const GINI_ABI = giniAbi;
     const CONTRACT_ABI = abi;
     const CHAIN_ID = "0x13882";
@@ -112,7 +112,6 @@ function PolygonConnect() {
             if (!window.ethereum) {
                 throw new Error("MetaMask is not installed.");
             }
-
             await configureNetwork(); // Ensure network is set before proceeding
 
             const webProvider = new ethers.BrowserProvider(window.ethereum);
@@ -330,6 +329,7 @@ function PolygonConnect() {
         <div className="card">
             {account ? (
                 <div className="wallet-info">
+                    <p><strong>Bridge Address:</strong> {CONTRACT_ADDRESS}</p>
                     <p><strong>Connected Account:</strong> {account}</p>
                     <p><strong>Balance:</strong> {balance} GINI</p>
                     <div className="button-group">
